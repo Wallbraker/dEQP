@@ -40,7 +40,7 @@ fn printRegression(test: Test)
 
 fn printAnyChange(test: Test)
 {
-	info("%s %s was (%s)", test.name, test.result.format(), test.compare.format());
+	info("%s previously %s (now %s)", test.name, test.result.format(), test.compare.format());
 }
 
 fn printFail(test: Test)
