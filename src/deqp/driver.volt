@@ -15,6 +15,7 @@ import watt = [
 	];
 
 import file = watt.io.file;
+import proc = watt.process;
 
 import deqp.io;
 import deqp.tests;
@@ -36,6 +37,7 @@ public:
 	noRerunTests: bool = false;
 	noPassedResults: bool = false;
 	printOpts: PrintOptions;
+	vtestCmd: string = "/home/jakob/GLES/build-virgl/vtest/virgl_test_server";
 
 	batchSize: u32;
 
