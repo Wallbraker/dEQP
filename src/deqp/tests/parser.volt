@@ -41,6 +41,7 @@ fn parseTestFile(s: Settings)
 	gl41: StringsSink;
 	gl42: StringsSink;
 	gl43: StringsSink;
+	gl44: StringsSink;
 	gl45: StringsSink;
 	gl46: StringsSink;
 	gles2: StringsSink;
