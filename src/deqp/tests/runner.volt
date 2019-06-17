@@ -314,7 +314,7 @@ public:
 		seed := s.drv.settings.randomize;
 
 		r: watt.RandomGenerator;
-		r.seed();
+		r.seed(seed);
 
 		info("\tRandomizing tests using seed %s", seed);
 
