@@ -113,8 +113,7 @@ fn printRandomize(suffix: string = ":")
 {
 	info("Randomize test order%s", suffix);
 	info("\tUse 0 for smart mode.");
-	info("\tArg:    --hasty-batch-size X");
-	info("\tConfig: hastyBatchSize=X");
+	info("\tArg:    --randomize X");
 }
 
 fn printCtsBuildDir(suffix: string = ":")
