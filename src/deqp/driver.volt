@@ -266,6 +266,7 @@ public:
 
 		if (settings.noRerunTests) {
 			info("\tRerunning tests disabled by arguments or settings");
+			return;
 		}
 
 		if (eightOfTests > (bad - inc)) {
