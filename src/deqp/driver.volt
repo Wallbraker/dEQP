@@ -259,29 +259,32 @@ public:
 			return;
 		}
 
+		// Only rerun tests if a fewer then eight of the tests fail.
+		eightOfTests := total / 8;
+
 		info(" :: Rerunning failed test(s).");
 
 		if (settings.noRerunTests) {
 			info("\tRerunning tests disabled by arguments or settings");
 		}
 
-		if ((total / 8) > (bad - inc)) {
+		if (eightOfTests > (bad - inc)) {
 			mask |= 1u << Result.Fail;
 			mask |= 1u << Result.InternalError;
 		} else {
-			info("\tTo many failing tests %s", bad);
+			info("\tTo many failing tests %s, not rerunning.", bad);
 		}
 
-		if ((total / 8) > inc) {
+		if (eightOfTests > inc) {
 			mask |= 1u << Result.Incomplete;
 			mask |= 1u << Result.BadTerminate;
 			mask |= 1u << Result.BadTerminatePass;
 		} else {
-			info("\tTo many incomplete tests %s", inc);
+			info("\tTo many incomplete tests %s, not rerunning.", inc);
 		}
 
 		if (mask == 0) {
-			info("\tNot rerunning any tests as there are to many.");
+			info("\tNot rerunning any tests as there are to many failing or incomplete.");
 			return;
 		}
 
