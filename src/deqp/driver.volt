@@ -33,6 +33,7 @@ public:
 
 	testNamesFiles: string[];
 	ctsBuildDir: string;
+	noRerunTests: bool = false;
 
 	batchSize: u32;
 
@@ -259,6 +260,10 @@ public:
 		}
 
 		info(" :: Rerunning failed test(s).");
+
+		if (settings.noRerunTests) {
+			info("\tRerunning tests disabled by arguments or settings");
+		}
 
 		if ((total / 8) > (bad - inc)) {
 			mask |= 1u << Result.Fail;

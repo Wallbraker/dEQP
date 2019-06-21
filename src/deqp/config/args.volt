@@ -16,7 +16,7 @@ import deqp.config.info;
 
 fn parseArgs(settings: Settings, args: string[])
 {
-	printFailing: bool;
+	printFailing, noRerunTests: bool;
 	threads, batchSize, randomize: i32;
 	ctsBuildDir, resultsFile, tempDir, regressionFile: string;
 	testNamesFiles, regressionFiles: string[];
@@ -27,6 +27,7 @@ fn parseArgs(settings: Settings, args: string[])
 	watt.getopt(ref args, "test-names-file", ref testNamesFiles);
 	watt.getopt(ref args, "results-file", ref resultsFile);
 	watt.getopt(ref args, "temp-dir", ref tempDir);
+	watt.getopt(ref args, "no-rerun-tests", ref noRerunTests);
 	watt.getopt(ref args, "print-failing", ref printFailing);
 	watt.getopt(ref args, "randomize", ref randomize);
 	watt.getopt(ref args, "check|regression-file", ref regressionFiles);
@@ -55,6 +56,9 @@ fn parseArgs(settings: Settings, args: string[])
 	}
 	if (printFailing) {
 		settings.printFailing = printFailing;
+	}
+	if (noRerunTests) {
+		settings.noRerunTests = noRerunTests;
 	}
 	if (regressionFiles !is null) {
 		settings.regressionFiles = regressionFiles;

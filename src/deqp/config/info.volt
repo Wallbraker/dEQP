@@ -32,6 +32,7 @@ fn printConfig(s: Settings)
 	info("\tthreads        = %s", s.threads);
 	info("\tresultsFile    = '%s'", s.resultsFile);
 	info("\ttempDir        = '%s'", s.tempDir);
+	info("\tnoRerunTests   = %s", s.noRerunTests);
 }
 
 fn printAllArgsAndConfig()
