@@ -131,7 +131,6 @@ fn parseAndCheckRegressions(suites: Suite[], filenames: string[]) i32
 		}
 	}
 
-	regressed, improvement, quality, any: bool;
 	foreach (filename; filenames) {
 		// Load the file and split into lines.
 		info("\tReading file %s.", filename);
@@ -184,12 +183,17 @@ fn parseAndCheckRegressions(suites: Suite[], filenames: string[]) i32
 			test := *t;
 
 			test.compare = parseResult(resultText);
+		}
+	}
 
+	regressed, improvement, quality, any: bool;
+	foreach (suite; suites) {
+		foreach (test; suite.tests) {
 			// Update change tracking.
 			improvement = improvement || test.hasImproved();
 			regressed = regressed || test.hasRegressed();
 			quality = quality || test.hasQualityChange();
-			any = any || test.hasAnyChange();
+			any = any || test.hasAnyChangeExceptNotListed();
 		}
 	}
 
