@@ -79,7 +79,7 @@ public:
 	}
 }
 
-class Suite
+abstract class Suite
 {
 public:
 	drv: Driver;
