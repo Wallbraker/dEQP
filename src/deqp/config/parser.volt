@@ -58,6 +58,9 @@ fn parseConfigFile(s: Settings)
 	if (root.hasKey("noRerunTests")) {
 		s.noRerunTests = root["noRerunTests"].boolean();
 	}
+	if (root.hasKey("noPassedResults")) {
+		s.noRerunTests = root["noPassedResults"].boolean();
+	}
 	if (root.hasKey("regressionFile")) {
 		s.resultsFile = root["regressionFile"].str();
 	}

@@ -34,6 +34,7 @@ public:
 	testNamesFiles: string[];
 	ctsBuildDir: string;
 	noRerunTests: bool = false;
+	noPassedResults: bool = false;
 
 	batchSize: u32;
 
@@ -340,11 +341,7 @@ public:
 		o.writefln("# Pass %s", results.numPass);
 		o.writefln("# QualityWarning %s", results.numQualityWarning);
 		o.writefln("# CompatibilityWarning %s", results.numCompatibilityWarning);
-		foreach (suite; results.suites) {
-			foreach (test; suite.tests) {
-				o.write(new "${test.name} ${test.result}\n");
-			}
-		}
+		o.writeResultsPrune(results.suites, settings);
 		o.flush();
 		o.close();
 		o = null;
@@ -387,5 +384,35 @@ public:
 	{
 		temporaryFiles[file] = false;
 		return file;
+	}
+}
+
+private:
+fn writeResultsPrune(o: watt.OutputFileStream, suites: Suite[], settings: Settings)
+{
+	if (settings.noPassedResults) {
+		o.writeResultsNotPassed(suites);
+	} else {
+		o.writeResultsAll(suites);
+	}
+}
+
+fn writeResultsAll(o: watt.OutputFileStream, suites: Suite[])
+{
+	foreach (suite; suites) {
+		foreach (test; suite.tests) {
+			o.write(new "${test.name} ${test.result}\n");
+		}
+	}
+}
+
+fn writeResultsNotPassed(o: watt.OutputFileStream, suites: Suite[])
+{
+	foreach (suite; suites) {
+		foreach (test; suite.tests) {
+			if (test.result != Result.Pass) {
+				o.write(new "${test.name} ${test.result}\n");
+			}
+		}
 	}
 }

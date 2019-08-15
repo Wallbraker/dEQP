@@ -19,20 +19,21 @@ import deqp.config.parser;
 fn printConfig(s: Settings)
 {
 	info(" :: Config");
-	info("\tprintFailing   = %s", s.printFailing);
+	info("\tprintFailing    = %s", s.printFailing);
 	foreach (testNamesFile; s.testNamesFiles) {
-		info("\ttestNamesFile  = %s", testNamesFile);
+		info("\ttestNamesFile   = %s", testNamesFile);
 	}
 	foreach (regressionFile; s.regressionFiles) {
-		info("\tregressionFile = %s", regressionFile);
+		info("\tregressionFile  = %s", regressionFile);
 	}
-	info("\tctsBuildDir    = '%s'", s.ctsBuildDir);
-	info("\tbatchSize      = %s%s", s.batchSize, s.batchSize == 0 ? " (smart mode)" : "");
-	info("\trandomize      = %s", s.randomize);
-	info("\tthreads        = %s", s.threads);
-	info("\tresultsFile    = '%s'", s.resultsFile);
-	info("\ttempDir        = '%s'", s.tempDir);
-	info("\tnoRerunTests   = %s", s.noRerunTests);
+	info("\tctsBuildDir     = '%s'", s.ctsBuildDir);
+	info("\tbatchSize       = %s%s", s.batchSize, s.batchSize == 0 ? " (smart mode)" : "");
+	info("\trandomize       = %s", s.randomize);
+	info("\tthreads         = %s", s.threads);
+	info("\tresultsFile     = '%s'", s.resultsFile);
+	info("\ttempDir         = '%s'", s.tempDir);
+	info("\tnoRerunTests    = %s", s.noRerunTests);
+	info("\tnoPassedResults = %s", s.noPassedResults);
 }
 
 fn printAllArgsAndConfig()
