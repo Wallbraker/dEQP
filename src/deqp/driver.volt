@@ -75,6 +75,7 @@ public:
 	launcher: Launcher;
 	results: Results;
 	temporaryFiles: bool[string];
+	enum Version = "0.1.2";
 
 
 public:
@@ -83,6 +84,8 @@ public:
 	 */
 	fn run(args: string[]) i32
 	{
+		info(" :: dEQP-Volt\n\tversion         = %s", Version);
+
 		settings = new Settings();
 		parseConfigFile(settings);
 		parseArgs(settings, args);
