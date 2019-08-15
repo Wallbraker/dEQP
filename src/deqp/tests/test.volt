@@ -98,7 +98,6 @@ public:
 	{
 		this.drv = drv;
 		this.suffix = suffix;
-		runDir = new "${buildDir}${sep}external${sep}openglcts${sep}modules";
 
 		this.tests = new Test[](tests.length);
 		foreach (i, ref test; this.tests) {
@@ -114,6 +113,7 @@ class CtsSuite : Suite
 		super(drv, buildDir, tempBaseDir, suffix, tests);
 		api = "GLES";
 		tempDir = new "${tempBaseDir}${sep}GLES${suffix}";
+		runDir = new "${buildDir}${sep}modules${sep}gles${suffix}";
 		command = new "${buildDir}${sep}modules${sep}gles${suffix}${sep}deqp-gles${suffix}";
 	}
 }
@@ -125,6 +125,7 @@ class KhrSuite : Suite
 		super(drv, buildDir, tempBaseDir, suffix, tests);
 		api = "GL";
 		tempDir = new "${tempBaseDir}${sep}GL${suffix}";
+		runDir = new "${buildDir}${sep}external${sep}openglcts${sep}modules";
 		command = new "${buildDir}${sep}external${sep}openglcts${sep}modules${sep}glcts";
 	}
 }
