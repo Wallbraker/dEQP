@@ -75,7 +75,7 @@ public:
 	launcher: Launcher;
 	results: Results;
 	temporaryFiles: bool[string];
-	enum Version = "0.1.3";
+	enum Version = "0.1.4-dev";
 
 
 public:
