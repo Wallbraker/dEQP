@@ -143,6 +143,9 @@ fn parseAndCheckRegressions(suites: Suite[], filenames: string[]) i32
 			if (watt.startsWith(line, "dEQP-GLES")) {
 				break;
 			}
+			if (watt.startsWith(line, "KHR-GL")) {
+				break;
+			}
 			count++;
 		}
 
