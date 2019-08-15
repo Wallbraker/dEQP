@@ -126,6 +126,7 @@ fn parseAndCheckRegressions(suites: Suite[], filenames: string[]) i32
 	database: Test[string];
 	foreach (suite; suites) {
 		foreach (test; suite.tests) {
+			test.compare = Result.NotListed;
 			database[test.name] = test;
 		}
 	}

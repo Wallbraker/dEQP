@@ -59,6 +59,12 @@ public:
 		return isResultAndCompareAnyChange(result, compare);
 	}
 
+	fn hasAnyChangeExceptNotListed() bool
+	{
+
+		return isResultAndCompareAnyChangeExceptNotListed(result, compare);
+	}
+
 	fn hasPassed() bool
 	{
 		return isResultPassing(result);

@@ -20,7 +20,7 @@ fn printResultsToStdout(suites: Suite[])
 				test.printRegression();
 			} else if (test.hasQualityChange()) {
 				test.printAnyChange();
-			} else if (test.hasAnyChange()) {
+			} else if (test.hasAnyChangeExceptNotListed()) {
 				test.printAnyChange();
 			} else if (test.hasFailed()) {
 				test.printFail();
@@ -90,5 +90,6 @@ fn format(res: Result) string
 	case QualityWarning:       return "\u001b[33mQualityWarning\u001b[0m";
 	case CompatibilityWarning: return "\u001b[33mCompatibilityWarning\u001b[0m";
 	case Pass:                 return "\u001b[32mPass\u001b[0m";
+	case NotListed:            return "\u001b[32mNotListed\u001b[0m";
 	}
 }

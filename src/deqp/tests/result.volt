@@ -23,6 +23,7 @@ enum Result
 	QualityWarning,
 	CompatibilityWarning,
 	Pass,
+	NotListed, //< For compare, the test wasn't in the regression file.
 }
 
 fn isResultPassing(result: Result) bool
@@ -37,6 +38,7 @@ fn isResultPassing(result: Result) bool
 	case QualityWarning:       return true;
 	case CompatibilityWarning: return true;
 	case Pass:                 return true;
+	case NotListed:            return true;
 	}
 }
 
@@ -52,6 +54,7 @@ fn isResultFailing(result: Result) bool
 	case QualityWarning:       return false;
 	case CompatibilityWarning: return false;
 	case Pass:                 return false;
+	case NotListed:            return false;
 	}
 }
 
@@ -75,8 +78,25 @@ fn isResultAndCompareRegression(result: Result, compare: Result) bool
 
 fn isResultAndCompareQualityChange(result: Result, compare: Result) bool
 {
+	if (compare == Result.NotListed) {
+		compare = Result.Pass;
+	}
+
 	if (result.isResultPassing() && compare.isResultPassing()) {
 		return result != compare;
+	} else {
+		return false;
+	}
+}
+
+fn isResultAndCompareAnyChangeExceptNotListed(result: Result, compare: Result) bool
+{
+	if (compare == Result.NotListed) {
+		return false;
+	}
+
+	if (result != compare) {
+		return true;
 	} else {
 		return false;
 	}
@@ -161,6 +181,7 @@ public:
 				case CompatibilityWarning: numCompatibilityWarning++; break;
 				case Pass: numPass++; break;
 				case NotSupported: numNotSupported++; break;
+				case NotListed: break;
 				}
 			}
 		}
