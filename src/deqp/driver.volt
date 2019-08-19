@@ -194,8 +194,12 @@ public:
 		}
 
 		// Print failing tests?
-		if (settings.printFailing || settings.regressionFiles.length > 0) {
+		if (settings.printFailing) {
 			printResultsToStdout(results.suites);
+		} else {
+			info(" :: Not printing changes and failing tests.");
+			info("\tUse: --print-failing");
+			info("\tOr see results file: '%s'", settings.resultsFile);
 		}
 
 		info(" :: Exiting!");
