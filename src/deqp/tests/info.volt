@@ -94,7 +94,8 @@ private:
 
 fn printRegression(test: Test, ref opts: PrintOptions)
 {
-	info("%s %s \u001b[41;1mREGRESSED\u001b[0m from (%s)", test.name, test.result.format(ref opts), test.compare.format(ref opts));
+	reg := opts.colour ? "\u001b[41;1mREGRESSED\u001b[0m" : "REGRESSED";
+	info("%s %s %s from (%s)", test.name, test.result.format(ref opts), reg, test.compare.format(ref opts));
 }
 
 fn printAnyChange(test: Test, ref opts: PrintOptions)
