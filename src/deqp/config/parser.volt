@@ -52,9 +52,6 @@ fn parseConfigFile(s: Settings)
 	if (root.hasKey("threads")) {
 		s.threads = cast(u32) root["threads"].integer();
 	}
-	if (root.hasKey("printFailing")) {
-		s.printFailing = root["printFailing"].boolean();
-	}
 	if (root.hasKey("noRerunTests")) {
 		s.noRerunTests = root["noRerunTests"].boolean();
 	}
@@ -63,5 +60,30 @@ fn parseConfigFile(s: Settings)
 	}
 	if (root.hasKey("regressionFile")) {
 		s.resultsFile = root["regressionFile"].str();
+	}
+
+	if (root.hasKey("printFailing")) {
+		v := root["printFailing"].boolean();
+		s.printOpts.fail = true;
+		s.printOpts.quality = true;
+		s.printOpts.regression = true;
+	}
+
+	if (root.hasKey("printFail")) {
+		s.printOpts.fail = root["printFail"].boolean();
+	}
+	if (root.hasKey("printQuality")) {
+		s.printOpts.quality = root["printQuality"].boolean();
+	}
+	if (root.hasKey("printRegression")) {
+		s.printOpts.regression = root["printRegression"].boolean();
+	}
+
+	if (root.hasKey("colourTerm")) {
+		s.printOpts.colour = root["colourTerm"].boolean();
+	}
+
+	if (root.hasKey("groupUpdates")) {
+		s.printOpts.groups = root["groupUpdates"].boolean();
 	}
 }

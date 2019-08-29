@@ -35,10 +35,9 @@ public:
 	ctsBuildDir: string;
 	noRerunTests: bool = false;
 	noPassedResults: bool = false;
+	printOpts: PrintOptions;
 
 	batchSize: u32;
-
-	printFailing: bool = false;
 
 	randomize: u32;
 
@@ -62,6 +61,17 @@ public:
 	testsGLES2: string[];
 	testsGLES3: string[];
 	testsGLES31: string[];
+
+
+public:
+	this()
+	{
+		printOpts.colour = true;
+		printOpts.groups = true;
+		printOpts.regression = false;
+		printOpts.quality = false;
+		printOpts.fail = false;
+	}
 }
 
 /*!
@@ -194,13 +204,7 @@ public:
 		}
 
 		// Print failing tests?
-		if (settings.printFailing) {
-			printResultsToStdout(results.suites);
-		} else {
-			info(" :: Not printing changes and failing tests.");
-			info("\tUse: --print-failing");
-			info("\tOr see results file: '%s'", settings.resultsFile);
-		}
+		printResultsToStdout(ref settings.printOpts, results.suites);
 
 		info(" :: Exiting!");
 		return ret;
@@ -215,7 +219,7 @@ public:
 		info(" :: Running tests.", settings.batchSize);
 
 		// Loop over the testsuites
-		dispatch(this, results.suites);
+		dispatch(this, results.suites, ref settings.printOpts);
 
 		// Count the results.
 		results.count();
@@ -320,7 +324,7 @@ public:
 				test.result = Result.Incomplete;
 
 				// Then launch the test.
-				group := new Group(this, suite, suite.tests[offset .. offset + 1], cast(u32) offset, "rerun");
+				group := new Group(this, suite, suite.tests[offset .. offset + 1], cast(u32) offset, "rerun", ref settings.printOpts);
 				group.run(launcher);
 				gs.sink(group);
 			}

@@ -32,9 +32,9 @@ import deqp.tests.result;
 import deqp.tests.parser;
 
 
-fn dispatch(drv: Driver, suites: Suite[])
+fn dispatch(drv: Driver, suites: Suite[], ref opts: PrintOptions)
 {
-	s := new Scheduler(drv, suites);
+	s := new Scheduler(drv, suites, ref opts);
 
 	foreach (suite; suites) {
 		// Temporary directory.
@@ -88,6 +88,7 @@ class Group
 {
 public:
 	drv: Driver;
+	opts: PrintOptions;
 	suite: Suite;
 	start, end: u32;
 
@@ -104,9 +105,10 @@ public:
 
 
 public:
-	this(drv: Driver, suite: Suite, tests: Test[], offset: u32, filePrefix: string)
+	this(drv: Driver, suite: Suite, tests: Test[], offset: u32, filePrefix: string, ref opts: PrintOptions)
 	{
 		this.drv = drv;
+		this.opts = opts;
 		this.suite = suite;
 		this.tests = tests;
 		this.start = offset + 1;
@@ -175,7 +177,7 @@ private:
 		time := watt.format(" (%s.%03ss)", ms / 1000, ms % 1000);
 
 
-		printResultFromGroup(suite, tests, retval, start, end, time);
+		printResultFromGroup(ref opts, suite, tests, retval, start, end, time);
 
 		// If the test run didn't complete.
 		if (retval != 0) {
@@ -222,6 +224,7 @@ final class Scheduler
 public:
 	drv: Driver;
 	launcher: Launcher;
+	opts: PrintOptions;
 
 	numDispatched: size_t;
 	numTests: size_t;
@@ -242,10 +245,11 @@ public:
 
 
 public:
-	this(drv: Driver, suites: Suite[])
+	this(drv: Driver, suites: Suite[], ref opts: PrintOptions)
 	{
 		this.drv = drv;
 		this.launcher = drv.launcher;
+		this.opts = opts;
 
 		foreach (suite; suites) {
 			numTests += suite.tests.length;
@@ -271,7 +275,7 @@ public:
 
 	fn launch(suite: Suite, tests: Test[], offset: u32)
 	{
-		group := new Group(drv, suite, tests, offset, "batch");
+		group := new Group(drv, suite, tests, offset, "batch", ref opts);
 		group.run(launcher);
 
 		numDispatched += tests.length;

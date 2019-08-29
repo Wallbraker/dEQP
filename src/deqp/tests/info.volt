@@ -11,51 +11,80 @@ import deqp.tests.test;
 import deqp.tests.result;
 
 
-fn printResultsToStdout(suites: Suite[])
+struct PrintOptions
+{
+	colour: bool;     //< Use terminal colours
+	groups: bool;     //< Print updates about groups
+	regression: bool; //< Print regressions results.
+	quality: bool;    //< Print quality changes.
+	fail: bool;       //< Print non-regression failures.
+}
+
+fn printResultsToStdout(ref opts: PrintOptions, suites: Suite[])
 {
 	info(" :: Printing changes and failing tests.");
+	if (!opts.regression && !opts.quality && !opts.fail) {
+		info("\tNot printing results as neither regression, quality or failures are printed, use:");
+		info("\t--[no-]print-regression");
+		info("\t--[no-]print-quality");
+		info("\t--[no-]print-fail");
+		return;
+	}
+
 	foreach (suit; suites) {
 		foreach (test; suit.tests) {
-			if (test.hasRegressed()) {
-				test.printRegression();
-			} else if (test.hasQualityChange()) {
-				test.printAnyChange();
-			} else if (test.hasAnyChangeExceptNotListed()) {
-				test.printAnyChange();
-			} else if (test.hasFailed()) {
-				test.printFail();
+			if (test.hasRegressed() && opts.regression) {
+				test.printRegression(ref opts);
+			} else if (test.hasImproved() && opts.regression) {
+				test.printAnyChange(ref opts);
+			} else if (test.hasQualityChange() && opts.quality) {
+				test.printAnyChange(ref opts);
+			} else if (test.hasAnyChangeExceptNotListed() && opts.quality) {
+				test.printAnyChange(ref opts);
+			} else if (test.hasFailed() && opts.fail) {
+				test.printFail(ref opts);
 			}
 		}
 	}
 }
 
-fn printResultFromGroup(suite: Suite, tests: Test[], retval: i32, start: u32, end: u32, time: string)
+fn printResultFromGroup(ref opts: PrintOptions, suite: Suite, tests: Test[], retval: i32, start: u32, end: u32, time: string)
 {
+	if (!opts.groups) {
+		return;
+	}
+
 	hasFailedTests: bool;
 	foreach (test; tests) {
 		hasFailedTests |= test.hasFailed();
 	}
 
 	if (retval != 0) {
+		prefix := opts.getExclamation();
+
 		// The test run didn't complete.
 		if (tests.length == 1) {
-			info("\t\u001b[41;1m!\u001b[0m GLES%s bad retval: %s, retval: %s%s", suite.suffix, tests[0].name, retval, time);
+			info("\t%s GLES%s bad retval: %s, retval: %s%s", prefix, suite.suffix, tests[0].name, retval, time);
 		} else {
-			info("\t\u001b[41;1m!\u001b[0m GLES%s bad retval: %s .. %s, retval: %s%s", suite.suffix, start, end, retval, time);
+			info("\t%s GLES%s bad retval: %s .. %s, retval: %s%s", prefix, suite.suffix, start, end, retval, time);
 		}
 	} else if (hasFailedTests) {
+		prefix := opts.getCross();
+
 		// One or more tests failed.
 		if (tests.length == 1) {
-			info("\t\u001b[31m⨯\u001b[0m GLES%s test failed: %s%s", suite.suffix, tests[0].name, time);
+			info("\t%s GLES%s test failed: %s%s", prefix, suite.suffix, tests[0].name, time);
 		} else {
-			info("\t\u001b[31m⨯\u001b[0m GLES%s had failures: %s .. %s%s", suite.suffix, start, end, time);
+			info("\t%s GLES%s had failures: %s .. %s%s", prefix, suite.suffix, start, end, time);
 		}
 	} else {
+		prefix := opts.getCheckmark();
+
 		// The test run completed okay.
 		if (tests.length == 1) {
-			info("\t\u001b[32m✔\u001b[0m GLES%s done: %s%s", suite.suffix, tests[0].name, time);
+			info("\t%s GLES%s done: %s%s", prefix, suite.suffix, tests[0].name, time);
 		} else {
-			info("\t\u001b[32m✔\u001b[0m GLES%s done: %s .. %s%s", suite.suffix, start, end, time);
+			info("\t%s GLES%s done: %s .. %s%s", prefix, suite.suffix, start, end, time);
 		}
 	}
 }
@@ -63,33 +92,75 @@ fn printResultFromGroup(suite: Suite, tests: Test[], retval: i32, start: u32, en
 private:
 
 
-fn printRegression(test: Test)
+fn printRegression(test: Test, ref opts: PrintOptions)
 {
-	info("%s %s \u001b[41;1mREGRESSED\u001b[0m from (%s)", test.name, test.result.format(), test.compare.format());
+	info("%s %s \u001b[41;1mREGRESSED\u001b[0m from (%s)", test.name, test.result.format(ref opts), test.compare.format(ref opts));
 }
 
-fn printAnyChange(test: Test)
+fn printAnyChange(test: Test, ref opts: PrintOptions)
 {
-	info("%s %s was (%s)", test.name, test.result.format(), test.compare.format());
+	info("%s %s was (%s)", test.name, test.result.format(ref opts), test.compare.format(ref opts));
 }
 
-fn printFail(test: Test)
+fn printFail(test: Test, ref opts: PrintOptions)
 {
-	info("%s %s", test.name, test.result.format());
+	info("%s %s", test.name, test.result.format(ref opts));
 }
 
-fn format(res: Result) string
+fn getExclamation(ref opts: PrintOptions) string
 {
-	final switch (res) with (Result) {
-	case Incomplete:           return "\u001b[31mIncomplete\u001b[0m";
-	case Fail:                 return "\u001b[31mFail\u001b[0m";
-	case NotSupported:         return "\u001b[34mNotSupported\u001b[0m";
-	case InternalError:        return "\u001b[31mInternalError\u001b[0m";
-	case BadTerminate:         return "\u001b[31mBadTerminate\u001b[0m";
-	case BadTerminatePass:     return "\u001b[31mBadTerminatePass\u001b[0m";
-	case QualityWarning:       return "\u001b[33mQualityWarning\u001b[0m";
-	case CompatibilityWarning: return "\u001b[33mCompatibilityWarning\u001b[0m";
-	case Pass:                 return "\u001b[32mPass\u001b[0m";
-	case NotListed:            return "\u001b[32mNotListed\u001b[0m";
+	if (opts.colour) {
+		return "\u001b[41;1m!\u001b[0m";
+	} else {
+		return "!";
+	}
+}
+
+fn getCross(ref opts: PrintOptions) string
+{
+	if (opts.colour) {
+		return "\u001b[31m⨯\u001b[0m";
+	} else {
+		return "⨯";
+	}
+}
+
+fn getCheckmark(ref opts: PrintOptions) string
+{
+	if (opts.colour) {
+		return "\u001b[32m✔\u001b[0m";
+	} else {
+		return "✔";
+	}
+}
+
+fn format(res: Result, ref opts: PrintOptions) string
+{
+	if (opts.colour) {
+		final switch (res) with (Result) {
+		case Incomplete:           return "\u001b[31mIncomplete\u001b[0m";
+		case Fail:                 return "\u001b[31mFail\u001b[0m";
+		case NotSupported:         return "\u001b[34mNotSupported\u001b[0m";
+		case InternalError:        return "\u001b[31mInternalError\u001b[0m";
+		case BadTerminate:         return "\u001b[31mBadTerminate\u001b[0m";
+		case BadTerminatePass:     return "\u001b[31mBadTerminatePass\u001b[0m";
+		case QualityWarning:       return "\u001b[33mQualityWarning\u001b[0m";
+		case CompatibilityWarning: return "\u001b[33mCompatibilityWarning\u001b[0m";
+		case Pass:                 return "\u001b[32mPass\u001b[0m";
+		case NotListed:            return "\u001b[32mNotListed\u001b[0m";
+		}
+	} else {
+		final switch (res) with (Result) {
+		case Incomplete:           return "Incomplete";
+		case Fail:                 return "Fail";
+		case NotSupported:         return "NotSupported";
+		case InternalError:        return "InternalError";
+		case BadTerminate:         return "BadTerminate";
+		case BadTerminatePass:     return "BadTerminatePass";
+		case QualityWarning:       return "QualityWarning";
+		case CompatibilityWarning: return "CompatibilityWarning";
+		case Pass:                 return "Pass";
+		case NotListed:            return "NotListed";
+		}
 	}
 }

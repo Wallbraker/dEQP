@@ -19,7 +19,11 @@ import deqp.config.parser;
 fn printConfig(s: Settings)
 {
 	info(" :: Config");
-	info("\tprintFailing    = %s", s.printFailing);
+	info("\tcolourTerm      = %s", s.printOpts.colour);
+	info("\tprintFail       = %s", s.printOpts.fail);
+	info("\tprintQuality    = %s", s.printOpts.quality);
+	info("\tprintRegression = %s", s.printOpts.regression);
+
 	foreach (testNamesFile; s.testNamesFiles) {
 		info("\ttestNamesFile   = %s", testNamesFile);
 	}
@@ -38,7 +42,6 @@ fn printConfig(s: Settings)
 
 fn printAllArgsAndConfig()
 {
-	printFailing();
 	printThreads();
 	printHastyBatchSize();
 	printRandomize();
@@ -88,13 +91,6 @@ fn checkArgs(settings: Settings) i32
 
 
 private:
-
-fn printFailing(suffix: string = ":")
-{
-	info("Print the failing tests", suffix);
-	info("\tArgument: --print-failing");
-	info("\tConfig:   printFailing=[true|false]");
-}
 
 fn printThreads(suffix: string = ":")
 {

@@ -16,7 +16,7 @@ import deqp.config.info;
 
 fn parseArgs(settings: Settings, args: string[])
 {
-	printFailing, noRerunTests, noPassedResults: bool;
+	printFailures, noRerunTests, noPassedResults: bool;
 	threads, batchSize, randomize: i32;
 	ctsBuildDir, resultsFile, tempDir, regressionFile: string;
 	testNamesFiles, regressionFiles: string[];
@@ -29,9 +29,26 @@ fn parseArgs(settings: Settings, args: string[])
 	watt.getopt(ref args, "temp-dir", ref tempDir);
 	watt.getopt(ref args, "no-rerun-tests", ref noRerunTests);
 	watt.getopt(ref args, "no-passed-results", ref noPassedResults);
-	watt.getopt(ref args, "print-failing", ref printFailing);
 	watt.getopt(ref args, "randomize", ref randomize);
 	watt.getopt(ref args, "check|regression-file", ref regressionFiles);
+	watt.getopt(ref args, "print-failures", ref printFailures);
+
+
+	printFail, noPrintFail, printRegression, noPrintRegression,
+	printQuality, noPrintQuality, colourTerm, noColourTerm, groupUpdates, noGroupUpdates: bool;
+
+	watt.getopt(ref args, "print-fail", ref printFail);
+	watt.getopt(ref args, "no-print-fail", ref noPrintFail);
+	watt.getopt(ref args, "print-regression", ref printRegression);
+	watt.getopt(ref args, "no-print-regression", ref noPrintRegression);
+	watt.getopt(ref args, "print-quality", ref printQuality);
+	watt.getopt(ref args, "no-print-quality", ref noPrintQuality);
+
+	watt.getopt(ref args, "colour-term", ref colourTerm);
+	watt.getopt(ref args, "no-colour-term", ref noColourTerm);
+
+	watt.getopt(ref args, "group-updates", ref groupUpdates);
+	watt.getopt(ref args, "no-group-updates", ref noGroupUpdates);
 
 
 	if (threads > 0) {
@@ -55,9 +72,6 @@ fn parseArgs(settings: Settings, args: string[])
 	if (tempDir !is null) {
 		settings.tempDir = tempDir;
 	}
-	if (printFailing) {
-		settings.printFailing = printFailing;
-	}
 	if (noRerunTests) {
 		settings.noRerunTests = noRerunTests;
 	}
@@ -66,6 +80,58 @@ fn parseArgs(settings: Settings, args: string[])
 	}
 	if (regressionFiles !is null) {
 		settings.regressionFiles = regressionFiles;
+	}
+	if (printFailures) {
+		settings.printOpts.regression = true;
+		settings.printOpts.quality = true;
+		settings.printOpts.fail = true;
+		info("\t--print-failures is deprecated instead use:");
+		info("\t--[no-]print-fail --[no-]print-regression --[no-]print-quality");
+	}
+
+	if (printFail && noPrintFail) {
+		info("\tConflicting arguments for printFail");
+		abort(" :: Exiting!");
+	} else if (printFail) {
+		settings.printOpts.fail = true;
+	} else if (noPrintFail) {
+		settings.printOpts.fail = false;
+	}
+
+	if (printQuality && noPrintQuality) {
+		info("\tConflicting arguments for printQuality");
+		abort(" :: Exiting!");
+	} else if (printQuality) {
+		settings.printOpts.quality = true;
+	} else if (noPrintQuality) {
+		settings.printOpts.quality = false;
+	}
+
+	if (printRegression && noPrintRegression) {
+		info("\tConflicting arguments for printRegression");
+		abort(" :: Exiting!");
+	} else if (printRegression) {
+		settings.printOpts.regression = true;
+	} else if (noPrintRegression) {
+		settings.printOpts.regression = false;
+	}
+
+	if (colourTerm && noColourTerm) {
+		info("\tConflicting arguments for colourTerm");
+		abort(" :: Exiting!");
+	} else if (colourTerm) {
+		settings.printOpts.colour = true;
+	} else if (noColourTerm) {
+		settings.printOpts.colour = false;
+	}
+
+	if (groupUpdates && noGroupUpdates) {
+		info("\tConflicting arguments for groupUpdates");
+		abort(" :: Exiting!");
+	} else if (groupUpdates) {
+		settings.printOpts.groups = true;
+	} else if (noGroupUpdates) {
+		settings.printOpts.groups = false;
 	}
 
 	if (args.length > 1) {
