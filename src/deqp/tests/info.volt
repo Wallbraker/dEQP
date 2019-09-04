@@ -48,15 +48,12 @@ fn printResultsToStdout(ref opts: PrintOptions, suites: Suite[])
 	}
 }
 
-fn printResultFromGroup(ref opts: PrintOptions, suite: Suite, tests: Test[], retval: i32, start: u32, end: u32, time: string)
+fn printResultFromGroup(ref opts: PrintOptions, suite: Suite, tests: Test[],
+                        retval: i32, hasFailedTests: bool,
+                        start: u32, end: u32, time: string)
 {
 	if (!opts.groups) {
 		return;
-	}
-
-	hasFailedTests: bool;
-	foreach (test; tests) {
-		hasFailedTests |= test.hasFailed();
 	}
 
 	if (retval != 0) {

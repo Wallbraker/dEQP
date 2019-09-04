@@ -176,11 +176,17 @@ private:
 		ms := watt.convClockFreq(timeStop - timeStart, watt.ticksPerSecond, 1000);
 		time := watt.format(" (%s.%03ss)", ms / 1000, ms % 1000);
 
+		hasFailedTests: bool;
+		foreach (test; tests) {
+			hasFailedTests |= test.hasFailed();
+		}
 
-		printResultFromGroup(ref opts, suite, tests, retval, start, end, time);
+		printResultFromGroup(ref opts, suite, tests,
+		                     retval, hasFailedTests,
+		                     start, end, time);
 
 		// If the test run didn't complete.
-		if (retval != 0) {
+		if (retval != 0 || hasFailedTests) {
 			// Write out the tests to a file, for debugging.
 			writeTestsToFile();
 
