@@ -94,9 +94,6 @@ public:
 	command: string;
 	runDir: string;
 	tempDir: string;
-	config: string = "rgba8888d24s8ms0";
-	surfaceWidth: u32 = 256;
-	surfaceHeight: u32 = 256;
 
 	tests: Test[];
 

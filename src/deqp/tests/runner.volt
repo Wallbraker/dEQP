@@ -125,17 +125,19 @@ public:
 
 	fn run(launcher: Launcher)
 	{
+		s := drv.settings;
+
 		args := [
 			"--deqp-stdin-caselist",
-			"--deqp-surface-type=window",
-			new "--deqp-gl-config-name=${suite.config}",
-			"--deqp-log-images=enable",
-			"--deqp-watchdog=enable",
-			"--deqp-visibility=hidden",
-			new "--deqp-surface-width=${suite.surfaceWidth}",
-			new "--deqp-surface-height=${suite.surfaceHeight}",
+			new "--deqp-surface-type=${s.deqpSurfaceType}",
+			new "--deqp-log-images=${s.deqpLogImages}",
+			new "--deqp-watchdog=${s.deqpWatchdog}",
+			new "--deqp-visibility=${s.deqpVisibility}",
+			new "--deqp-gl-config-name=${s.deqpConfig}",
+			new "--deqp-surface-width=${s.deqpSurfaceWidth}",
+			new "--deqp-surface-height=${s.deqpSurfaceHeight}",
 			new "--deqp-log-filename=${fileCtsLog}",
-		];
+		] ~ s.deqpExtraArgs;
 
 		console := new watt.OutputFileStream(fileConsole);
 

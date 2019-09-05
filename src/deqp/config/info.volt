@@ -19,25 +19,33 @@ import deqp.config.parser;
 fn printConfig(s: Settings)
 {
 	info(" :: Config");
-	info("\tcolourTerm      = %s", s.printOpts.colour);
-	info("\tprintFail       = %s", s.printOpts.fail);
-	info("\tprintQuality    = %s", s.printOpts.quality);
-	info("\tprintRegression = %s", s.printOpts.regression);
+	info("\tcolourTerm        = %s", s.printOpts.colour);
+	info("\tprintFail         = %s", s.printOpts.fail);
+	info("\tprintQuality      = %s", s.printOpts.quality);
+	info("\tprintRegression   = %s", s.printOpts.regression);
 
 	foreach (testNamesFile; s.testNamesFiles) {
-		info("\ttestNamesFile   = %s", testNamesFile);
+		info("\ttestNamesFile     = %s", testNamesFile);
 	}
 	foreach (regressionFile; s.regressionFiles) {
-		info("\tregressionFile  = %s", regressionFile);
+		info("\tregressionFile    = %s", regressionFile);
 	}
-	info("\tctsBuildDir     = '%s'", s.ctsBuildDir);
-	info("\tbatchSize       = %s%s", s.batchSize, s.batchSize == 0 ? " (smart mode)" : "");
-	info("\trandomize       = %s", s.randomize);
-	info("\tthreads         = %s", s.threads);
-	info("\tresultsFile     = '%s'", s.resultsFile);
-	info("\ttempDir         = '%s'", s.tempDir);
-	info("\tnoRerunTests    = %s", s.noRerunTests);
-	info("\tnoPassedResults = %s", s.noPassedResults);
+	info("\tctsBuildDir       = '%s'", s.ctsBuildDir);
+	info("\tbatchSize         = %s%s", s.batchSize, s.batchSize == 0 ? " (smart mode)" : "");
+	info("\trandomize         = %s", s.randomize);
+	info("\tthreads           = %s", s.threads);
+	info("\tresultsFile       = '%s'", s.resultsFile);
+	info("\ttempDir           = '%s'", s.tempDir);
+	info("\tnoRerunTests      = %s", s.noRerunTests);
+	info("\tnoPassedResults   = %s", s.noPassedResults);
+	info("\tdeqpSurfaceType   = %s", s.deqpSurfaceType);
+	info("\tdeqpLogImages     = %s", s.deqpLogImages);
+	info("\tdeqpWatchdog      = %s", s.deqpWatchdog);
+	info("\tdeqpVisibility    = %s", s.deqpVisibility);
+	info("\tdeqpConfig        = %s", s.deqpConfig);
+	info("\tdeqpSurfaceWidth  = %s", s.deqpSurfaceWidth);
+	info("\tdeqpSurfaceHeight = %s", s.deqpSurfaceHeight);
+	info("\tdeqpExtraArgs     = %s", s.deqpExtraArgs);
 }
 
 fn printAllArgsAndConfig()

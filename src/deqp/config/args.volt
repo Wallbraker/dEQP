@@ -9,6 +9,8 @@ import watt = [
 	watt.text.getopt,
 	];
 
+import watt.text.string : startsWith;
+
 import deqp.io;
 import deqp.driver;
 import deqp.config.info;
@@ -134,9 +136,45 @@ fn parseArgs(settings: Settings, args: string[])
 		settings.printOpts.groups = false;
 	}
 
-	if (args.length > 1) {
-		info("Unknown argument '%s'", args[1]);
+	setIfFound(ref args, "deqp-surface-type", ref settings.deqpSurfaceType);
+	setIfFound(ref args, "deqp-log-images", ref settings.deqpLogImages);
+	setIfFound(ref args, "deqp-watchdog", ref settings.deqpWatchdog);
+	setIfFound(ref args, "deqp-visibility", ref settings.deqpVisibility);
+	setIfFound(ref args, "deqp-gl-config-name", ref settings.deqpConfig);
+	setIfFound(ref args, "deqp-surface-width", ref settings.deqpSurfaceWidth);
+	setIfFound(ref args, "deqp-surface-height", ref settings.deqpSurfaceHeight);
+
+	bad := false;
+	foreach (arg; args[1 .. $]) {
+		if (arg.startsWith("--deqp")) {
+			settings.deqpExtraArgs ~= arg;
+		} else {
+			info("Unknown argument '%s'", arg);
+			bad = true;
+		}
+	}
+
+	if (bad) {
 		printAllArgsAndConfig();
 		abort(" :: Exiting!");
+	}
+}
+
+
+private:
+
+fn setIfFound(ref args: string[], arg: string, ref val: string)
+{
+	string tmp;
+	if (watt.getopt(ref args, arg, ref tmp)) {
+		val = tmp;
+	}
+}
+
+fn setIfFound(ref args: string[], arg: string, ref val: bool)
+{
+	tmp: bool;
+	if (watt.getopt(ref args, arg, ref tmp)) {
+		val = tmp;
 	}
 }

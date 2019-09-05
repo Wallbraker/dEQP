@@ -86,4 +86,22 @@ fn parseConfigFile(s: Settings)
 	if (root.hasKey("groupUpdates")) {
 		s.printOpts.groups = root["groupUpdates"].boolean();
 	}
+
+	setIfFound(root, "deqpSurfaceType", ref s.deqpSurfaceType);
+	setIfFound(root, "deqpLogImages", ref s.deqpLogImages);
+	setIfFound(root, "deqpWatchdog", ref s.deqpWatchdog);
+	setIfFound(root, "deqpVisibility", ref s.deqpVisibility);
+	setIfFound(root, "deqpConfig", ref s.deqpConfig);
+	setIfFound(root, "deqpSurfaceWidth", ref s.deqpSurfaceWidth);
+	setIfFound(root, "deqpSurfaceHeight", ref s.deqpSurfaceHeight);
+}
+
+
+private:
+
+fn setIfFound(root: toml.Value, key: string, ref val: string)
+{
+	if (root.hasKey(key)) {
+		val = root[key].str();
+	}
 }

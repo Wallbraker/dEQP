@@ -47,6 +47,15 @@ public:
 
 	regressionFiles: string[];
 
+	deqpSurfaceType: string = "window";
+	deqpLogImages: string = "enable";
+	deqpWatchdog: string = "enable";
+	deqpVisibility: string = "hidden";
+	deqpConfig: string = "rgba8888d24s8ms0";
+	deqpSurfaceWidth: string = "256";
+	deqpSurfaceHeight: string = "256";
+	deqpExtraArgs: string[];
+
 	testsGL3: string[];
 	testsGL31: string[];
 	testsGL32: string[];
