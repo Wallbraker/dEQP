@@ -146,6 +146,7 @@ fn format(res: Result, ref opts: PrintOptions) string
 		case CompatibilityWarning: return "\u001b[33mCompatibilityWarning\u001b[0m";
 		case Pass:                 return "\u001b[32mPass\u001b[0m";
 		case NotListed:            return "\u001b[32mNotListed\u001b[0m";
+		case MalformedResult:      return "\u001b[31mMalformedResult\u001b[0m";
 		}
 	} else {
 		final switch (res) with (Result) {
@@ -159,6 +160,7 @@ fn format(res: Result, ref opts: PrintOptions) string
 		case CompatibilityWarning: return "CompatibilityWarning";
 		case Pass:                 return "Pass";
 		case NotListed:            return "NotListed";
+		case MalformedResult:      return "MalformedResult";
 		}
 	}
 }

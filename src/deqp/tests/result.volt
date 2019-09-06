@@ -23,7 +23,8 @@ enum Result
 	QualityWarning,
 	CompatibilityWarning,
 	Pass,
-	NotListed, //< For compare, the test wasn't in the regression file.
+	MalformedResult, //!< Parser can parse the results.
+	NotListed,       //!< For compare, the test wasn't in the regression file.
 }
 
 fn isResultPassing(result: Result) bool
@@ -39,6 +40,7 @@ fn isResultPassing(result: Result) bool
 	case CompatibilityWarning: return true;
 	case Pass:                 return true;
 	case NotListed:            return true;
+	case MalformedResult:      return false;
 	}
 }
 
@@ -55,6 +57,7 @@ fn isResultFailing(result: Result) bool
 	case CompatibilityWarning: return false;
 	case Pass:                 return false;
 	case NotListed:            return false;
+	case MalformedResult:      return true;
 	}
 }
 
@@ -123,6 +126,7 @@ public:
 	numPass: u32;
 	numQualityWarning: u32;
 	numCompatibilityWarning: u32;
+	numMalformedResults: u32;
 
 	suites: Suite[];
 
@@ -141,7 +145,8 @@ public:
 	fn getBad() u32
 	{
 		return numIncomplete + numFail + numInternalError +
-			numBadTerminate + numBadTerminatePass;
+			numBadTerminate + numBadTerminatePass +
+			numMalformedResults;
 	}
 
 	fn getSkip() u32
@@ -159,7 +164,7 @@ public:
 		return numFail + numIncomplete + numInternalError +
 		       numNotSupported + numPass + numQualityWarning +
 		       numIncomplete + numInternalError +
-		       numCompatibilityWarning;
+		       numCompatibilityWarning + numMalformedResults;
 	}
 
 	fn count()
@@ -167,7 +172,8 @@ public:
 		// Reset the old numbers.
 		numFail = numIncomplete = numInternalError = numNotSupported =
 			numBadTerminate = numBadTerminatePass = numPass =
-			numQualityWarning = numCompatibilityWarning =  0;
+			numQualityWarning = numCompatibilityWarning =
+			numMalformedResults = 0;
 
 		foreach (suite; suites) {
 			foreach (test; suite.tests) {
@@ -182,6 +188,7 @@ public:
 				case Pass: numPass++; break;
 				case NotSupported: numNotSupported++; break;
 				case NotListed: break;
+				case MalformedResult: numMalformedResults++; break;
 				}
 			}
 		}
