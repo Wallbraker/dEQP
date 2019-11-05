@@ -35,6 +35,7 @@ public:
 	ctsBuildDir: string;
 	noRerunTests: bool = false;
 	noPassedResults: bool = false;
+	invokeWithGDB: bool = false;
 	printOpts: PrintOptions;
 
 	batchSize: u32;

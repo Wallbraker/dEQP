@@ -61,6 +61,9 @@ fn parseConfigFile(s: Settings)
 	if (root.hasKey("regressionFile")) {
 		s.resultsFile = root["regressionFile"].str();
 	}
+	if (root.hasKey("invokeWithGDB")) {
+		s.invokeWithGDB = root["invokeWithGDB"].boolean();
+	}
 
 	if (root.hasKey("printFailing")) {
 		v := root["printFailing"].boolean();

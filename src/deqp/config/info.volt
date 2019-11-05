@@ -38,6 +38,7 @@ fn printConfig(s: Settings)
 	info("\ttempDir           = '%s'", s.tempDir);
 	info("\tnoRerunTests      = %s", s.noRerunTests);
 	info("\tnoPassedResults   = %s", s.noPassedResults);
+	info("\tinvokeWithGDB     = %s", s.invokeWithGDB);
 	info("\tdeqpSurfaceType   = %s", s.deqpSurfaceType);
 	info("\tdeqpLogImages     = %s", s.deqpLogImages);
 	info("\tdeqpWatchdog      = %s", s.deqpWatchdog);

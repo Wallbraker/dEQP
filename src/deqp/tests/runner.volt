@@ -127,6 +127,7 @@ public:
 	{
 		s := drv.settings;
 
+		cmd := suite.command;
 		args := [
 			"--deqp-stdin-caselist",
 			new "--deqp-surface-type=${s.deqpSurfaceType}",
@@ -138,6 +139,16 @@ public:
 			new "--deqp-surface-height=${s.deqpSurfaceHeight}",
 			new "--deqp-log-filename=${fileCtsLog}",
 		] ~ s.deqpExtraArgs;
+
+		if (s.invokeWithGDB) {
+			args = ["-batch", "-return-child-result",
+				"-ex", "run",
+				"-ex", "bt",
+				"-ex", "stop",
+				"-ex", "q",
+				"--args", cmd] ~ args;
+			cmd = "gdb";
+		}
 
 		console := new watt.OutputFileStream(fileConsole);
 

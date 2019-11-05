@@ -18,7 +18,7 @@ import deqp.config.info;
 
 fn parseArgs(settings: Settings, args: string[])
 {
-	printFailures, noRerunTests, noPassedResults: bool;
+	printFailures, noRerunTests, noPassedResults, invokeWithGDB: bool;
 	threads, batchSize, randomize: i32;
 	ctsBuildDir, resultsFile, tempDir, regressionFile: string;
 	testNamesFiles, regressionFiles: string[];
@@ -33,8 +33,8 @@ fn parseArgs(settings: Settings, args: string[])
 	watt.getopt(ref args, "no-passed-results", ref noPassedResults);
 	watt.getopt(ref args, "randomize", ref randomize);
 	watt.getopt(ref args, "check|regression-file", ref regressionFiles);
+	watt.getopt(ref args, "invoke-with-gdb", ref invokeWithGDB);
 	watt.getopt(ref args, "print-failures", ref printFailures);
-
 
 	printFail, noPrintFail, printRegression, noPrintRegression,
 	printQuality, noPrintQuality, colourTerm, noColourTerm, groupUpdates, noGroupUpdates: bool;
@@ -82,6 +82,9 @@ fn parseArgs(settings: Settings, args: string[])
 	}
 	if (regressionFiles !is null) {
 		settings.regressionFiles = regressionFiles;
+	}
+	if (invokeWithGDB) {
+		settings.invokeWithGDB = invokeWithGDB;
 	}
 	if (printFailures) {
 		settings.printOpts.regression = true;
