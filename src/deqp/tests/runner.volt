@@ -147,7 +147,7 @@ public:
 				"-ex", "stop",
 				"-ex", "q",
 				"--args", cmd] ~ args;
-			cmd = "gdb";
+			cmd = s.gdbCommand;
 		}
 
 		console := new watt.OutputFileStream(fileConsole);
@@ -160,7 +160,7 @@ public:
 
 		timeStart = watt.ticks();
 
-		launcher.run(suite.command, args, ss.toString(), console, done);
+		launcher.run(cmd, args, ss.toString(), console, done);
 		console.close();
 	}
 

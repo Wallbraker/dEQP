@@ -5,10 +5,13 @@
  */
 module deqp.driver;
 
+import core.exception;
+
 import watt = [
 	watt.path,
 	watt.io.streams,
 	watt.io.monotonic,
+	watt.process.spawn,
 	watt.algorithm,
 	watt.xdg.basedir,
 	watt.text.getopt,
@@ -36,6 +39,7 @@ public:
 	noRerunTests: bool = false;
 	noPassedResults: bool = false;
 	invokeWithGDB: bool = false;
+	gdbCommand: string;
 	printOpts: PrintOptions;
 
 	batchSize: u32;
@@ -112,6 +116,12 @@ public:
 
 		if (ret := checkArgs(settings)) {
 			return ret;
+		}
+
+		if (settings.invokeWithGDB) try {
+			settings.gdbCommand = watt.getCommandFromName("gdb");
+		} catch (Exception e) {
+			abort(e.msg);
 		}
 
 		// Tell the user what is going on.
