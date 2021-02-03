@@ -99,7 +99,7 @@ public:
 	launcher: Launcher;
 	results: Results;
 	temporaryFiles: bool[string];
-	enum Version = "0.1.6-dev";
+	enum Version = "0.1.6";
 
 
 public:
