@@ -198,8 +198,10 @@ private:
 		                     retval, hasFailedTests,
 		                     start, end, time);
 
+		notExpectedRetval := retval != 0 && retval != 1;
+
 		// If the test run didn't complete.
-		if (retval != 0 || hasFailedTests) {
+		if (notExpectedRetval != 0 || hasFailedTests) {
 			// Write out the tests to a file, for debugging.
 			writeTestsToFile();
 
@@ -216,6 +218,11 @@ private:
 
 		// If the testsuit terminated cleanely nothing more to do.
 		if (retval == 0) {
+			return;
+		}
+
+		// A test failed but didn't crash.
+		if (retval == 1) {
 			return;
 		}
 

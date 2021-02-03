@@ -56,7 +56,9 @@ fn printResultFromGroup(ref opts: PrintOptions, suite: Suite, tests: Test[],
 		return;
 	}
 
-	if (retval != 0) {
+	notExpectedRetval := retval != 0 && retval != 1;
+
+	if (notExpectedRetval) {
 		prefix := opts.getExclamation();
 
 		// The test run didn't complete.
