@@ -2,6 +2,10 @@
 
 Experiments in running the dEQP testsuit faster.
 
+<!--
+Copyright 2018, Collabora, Ltd.
+SPDX-License-Identifier: CC0-1.0
+-->
 
 ### Usage
 

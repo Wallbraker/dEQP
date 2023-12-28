@@ -1,2 +1,5 @@
+# SPDX-FileCopyrightText: 2018, Collabora, Ltd.
+# SPDX-License-Identifier: CC0-1.0
+
 name = "dEQP"
 dependencies = ["watt", "watt.toml"]
